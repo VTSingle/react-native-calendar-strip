@@ -4,7 +4,7 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { View, Animated, PixelRatio } from "react-native";
+import { View, Animated, PixelRatio, Text } from "react-native";
 
 import moment from "moment";
 
@@ -32,8 +32,6 @@ class CalendarStrip extends Component {
     selectedDate: PropTypes.any,
     onDateSelected: PropTypes.func,
     onWeekChanged: PropTypes.func,
-    onWeekScrollStart: PropTypes.func,
-    onWeekScrollEnd: PropTypes.func,
     onHeaderSelected: PropTypes.func,
     updateWeek: PropTypes.bool,
     useIsoWeekday: PropTypes.bool,
@@ -169,7 +167,7 @@ class CalendarStrip extends Component {
     {
       // Protect against undefined startingDate prop
       let _startingDate = this.props.startingDate || this.state.startingDate;
-      
+
       startingDate = { startingDate: this.setLocale(_startingDate)};
       selectedDate = { selectedDate: this.setLocale(this.props.selectedDate)};
       days = this.createDays(startingDate.startingDate, selectedDate.selectedDate);
@@ -476,7 +474,7 @@ class CalendarStrip extends Component {
         _startingDate = moment(minDate);
       }
     }
-
+    console.log('numDays ', numDays)
     for (let i = 0; i < numDays; i++) {
       let date;
       if (useIsoWeekday && !scrollable) {
@@ -533,17 +531,43 @@ class CalendarStrip extends Component {
 
   renderHeader() {
     return ( this.props.showMonth &&
-      <CalendarHeader
-        calendarHeaderFormat={this.props.calendarHeaderFormat}
-        calendarHeaderContainerStyle={this.props.calendarHeaderContainerStyle}
-        calendarHeaderStyle={this.props.calendarHeaderStyle}
-        onHeaderSelected={this.props.onHeaderSelected}
-        weekStartDate={this.state.weekStartDate}
-        weekEndDate={this.state.weekEndDate}
-        fontSize={this.state.monthFontSize}
-        allowHeaderTextScaling={this.props.shouldAllowFontScaling}
-        headerText={this.props.headerText}
-      />
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '90%', marginLeft: '5%', backgroundColor: 'rgba(243,120,31,0.1)', padding: 5, borderRadius: 5}}>
+          <WeekSelector
+            controlDate={this.props.minDate}
+            iconComponent={this.props.leftSelector}
+            iconContainerStyle={this.props.iconContainer}
+            iconInstanceStyle={this.props.iconLeftStyle}
+            iconStyle={this.props.iconStyle}
+            imageSource={this.props.iconLeft}
+            onPress={this.getPreviousWeek}
+            weekStartDate={this.state.weekStartDate}
+            weekEndDate={this.state.weekEndDate}
+            size={this.state.selectorSize}
+          />
+            <CalendarHeader
+              calendarHeaderFormat={this.props.calendarHeaderFormat}
+              calendarHeaderContainerStyle={this.props.calendarHeaderContainerStyle}
+              calendarHeaderStyle={this.props.calendarHeaderStyle}
+              onHeaderSelected={this.props.onHeaderSelected}
+              weekStartDate={this.state.weekStartDate}
+              weekEndDate={this.state.weekEndDate}
+              fontSize={this.state.monthFontSize}
+              allowHeaderTextScaling={this.props.shouldAllowFontScaling}
+              headerText={this.props.headerText}
+            />
+          <WeekSelector
+            controlDate={this.props.maxDate}
+            iconComponent={this.props.rightSelector}
+            iconContainerStyle={this.props.iconContainer}
+            iconInstanceStyle={this.props.iconRightStyle}
+            iconStyle={this.props.iconStyle}
+            imageSource={this.props.iconRight}
+            onPress={this.getNextWeek}
+            weekStartDate={this.state.weekStartDate}
+            weekEndDate={this.state.weekEndDate}
+            size={this.state.selectorSize}
+          />
+      </View>
     );
   }
 
@@ -562,8 +586,6 @@ class CalendarStrip extends Component {
           maxDate={this.props.maxDate}
           updateMonthYear={this.updateMonthYear}
           onWeekChanged={this.props.onWeekChanged}
-          onWeekScrollStart={this.props.onWeekScrollStart}
-          onWeekScrollEnd={this.props.onWeekScrollEnd}
           externalScrollView={this.props.externalScrollView}
         />
       );
@@ -589,18 +611,18 @@ class CalendarStrip extends Component {
           }
 
           <View style={styles.datesStrip}>
-            <WeekSelector
-              controlDate={this.props.minDate}
-              iconComponent={this.props.leftSelector}
-              iconContainerStyle={this.props.iconContainer}
-              iconInstanceStyle={this.props.iconLeftStyle}
-              iconStyle={this.props.iconStyle}
-              imageSource={this.props.iconLeft}
-              onPress={this.getPreviousWeek}
-              weekStartDate={this.state.weekStartDate}
-              weekEndDate={this.state.weekEndDate}
-              size={this.state.selectorSize}
-            />
+            {/*<WeekSelector*/}
+            {/*  controlDate={this.props.minDate}*/}
+            {/*  iconComponent={this.props.leftSelector}*/}
+            {/*  iconContainerStyle={this.props.iconContainer}*/}
+            {/*  iconInstanceStyle={this.props.iconLeftStyle}*/}
+            {/*  iconStyle={this.props.iconStyle}*/}
+            {/*  imageSource={this.props.iconLeft}*/}
+            {/*  onPress={this.getPreviousWeek}*/}
+            {/*  weekStartDate={this.state.weekStartDate}*/}
+            {/*  weekEndDate={this.state.weekEndDate}*/}
+            {/*  size={this.state.selectorSize}*/}
+            {/*/>*/}
 
             <View onLayout={this.onLayout} style={styles.calendarDates}>
               {this.props.showDate ? (
@@ -610,18 +632,18 @@ class CalendarStrip extends Component {
               )}
             </View>
 
-            <WeekSelector
-              controlDate={this.props.maxDate}
-              iconComponent={this.props.rightSelector}
-              iconContainerStyle={this.props.iconContainer}
-              iconInstanceStyle={this.props.iconRightStyle}
-              iconStyle={this.props.iconStyle}
-              imageSource={this.props.iconRight}
-              onPress={this.getNextWeek}
-              weekStartDate={this.state.weekStartDate}
-              weekEndDate={this.state.weekEndDate}
-              size={this.state.selectorSize}
-            />
+            {/*<WeekSelector*/}
+            {/*  controlDate={this.props.maxDate}*/}
+            {/*  iconComponent={this.props.rightSelector}*/}
+            {/*  iconContainerStyle={this.props.iconContainer}*/}
+            {/*  iconInstanceStyle={this.props.iconRightStyle}*/}
+            {/*  iconStyle={this.props.iconStyle}*/}
+            {/*  imageSource={this.props.iconRight}*/}
+            {/*  onPress={this.getNextWeek}*/}
+            {/*  weekStartDate={this.state.weekStartDate}*/}
+            {/*  weekEndDate={this.state.weekEndDate}*/}
+            {/*  size={this.state.selectorSize}*/}
+            {/*/>*/}
           </View>
 
           {this.props.showDate && this.props.calendarHeaderPosition === "below" &&

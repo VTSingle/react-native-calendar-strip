@@ -158,7 +158,7 @@ class CalendarDay extends Component {
   calcSizes = props => {
     return {
       containerWidth: Math.round(props.width),
-      containerHeight: Math.round(props.height),
+      containerHeight: 60,
       containerBorderRadius: Math.round(props.width / 2),
       dateNameFontSize: Math.round(props.width / 5),
       dateNumberFontSize: Math.round(props.width / 2.9)
@@ -509,6 +509,10 @@ class CalendarDay extends Component {
         </TouchableOpacity>
       );
     }
+    const currectDay =
+      new Date(date).getDate() === new Date().getDate()
+      && new Date(date).getMonth() === new Date().getMonth()
+      && new Date(date).getFullYear() === new Date().getFullYear()
 
     return calendarAnimation && !scrollable ? (
       <Animated.View style={[
@@ -520,6 +524,7 @@ class CalendarDay extends Component {
     ) : (
       <View style={styles.dateRootContainer}>
         {day}
+        {currectDay && <Text style={{fontSize: 12, color: 'rgb(153, 153, 153)'}}>Today</Text>}
       </View>
     );
   }

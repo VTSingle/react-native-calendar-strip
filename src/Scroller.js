@@ -22,8 +22,6 @@ export default class CalendarScroller extends Component {
     maxSimultaneousDays: PropTypes.number,
     updateMonthYear: PropTypes.func,
     onWeekChanged: PropTypes.func,
-    onWeekScrollStart: PropTypes.func,
-    onWeekScrollEnd: PropTypes.func,
     externalScrollView: PropTypes.func,
     pagingEnabled: PropTypes.bool
   }
@@ -39,7 +37,7 @@ export default class CalendarScroller extends Component {
     this.timeoutResetPositionId = null;
 
     this.updateLayout = renderDayParams => {
-      const itemHeight = renderDayParams.height;
+      const itemHeight = 80;
       const itemWidth = renderDayParams.width + renderDayParams.marginHorizontal * 2;
 
       const layoutProvider = new LayoutProvider(
@@ -92,7 +90,6 @@ export default class CalendarScroller extends Component {
       updateState = true;
       newState = {...newState, ...this.updateDaysData(this.props.data)};
     }
-
     if (updateState) {
       this.setState(newState);
     }
@@ -103,13 +100,13 @@ export default class CalendarScroller extends Component {
     if (this.state.visibleStartIndex === 0) {
       return;
     }
-    const newIndex = Math.max(this.state.visibleStartIndex - this.state.numVisibleItems, 0);
+    const newIndex = Math.max(this.state.visibleStartIndex - 30, 0);
     this.rlv.scrollToIndex(newIndex, true);
   }
 
   // Scroll right, guarding against end index.
   scrollRight = () => {
-    const newIndex = this.state.visibleStartIndex + this.state.numVisibleItems;
+    const newIndex = this.state.visibleStartIndex + 30;
     if (newIndex >= (this.state.numDays - 1)) {
       this.rlv.scrollToEnd(true); // scroll to the very end, including padding
       return;
@@ -255,57 +252,10 @@ export default class CalendarScroller extends Component {
     });
   }
 
-  onScrollStart = (event) => {
-    const {onWeekScrollStart} = this.props;
-    const {prevStartDate, prevEndDate} = this.state;
-
-    if (onWeekScrollStart && prevStartDate && prevEndDate) {
-      onWeekScrollStart(prevStartDate.clone(), prevEndDate.clone());
-    }
-  }
-
-  onScrollEnd = () => {
-    const {onWeekScrollEnd} = this.props;
-    const {visibleStartDate, visibleEndDate, prevEndDate} = this.state;
-
-    if (onWeekScrollEnd && visibleStartDate && visibleEndDate) {
-      if (!visibleEndDate.isSame(prevEndDate, "day")) {
-        onWeekScrollEnd(visibleStartDate.clone(), visibleEndDate.clone());
-      }
-    }
-  }
-
-  onScrollBeginDrag = () => {
-    const {
-      onWeekScrollStart,
-      onWeekScrollEnd,
-    } = this.props;
-    // Prev dates required only if scroll callbacks are defined
-    if (!onWeekScrollStart && !onWeekScrollEnd) {
-      return;
-    }
-    const {
-      data,
-      visibleStartDate,
-      visibleEndDate,
-      visibleStartIndex,
-      visibleEndIndex,
-    } = this.state;
-    const prevStartDate = visibleStartDate ? visibleStartDate
-      : (data[visibleStartIndex] ? data[visibleStartIndex].date : moment());
-    const prevEndDate = visibleEndDate ? visibleEndDate
-      : (data[visibleEndIndex] ? data[visibleEndIndex].date : moment());
-
-    this.setState({
-      prevStartDate,
-      prevEndDate,
-    });
-  }
-
   onLayout = event => {
     let width = event.nativeEvent.layout.width;
     this.setState({
-      numVisibleItems: Math.round(width / this.state.itemWidth),
+      numVisibleItems: Math.floor(width / this.state.itemWidth),
     });
   }
 
@@ -341,9 +291,6 @@ export default class CalendarScroller extends Component {
           scrollViewProps={{
             showsHorizontalScrollIndicator: false,
             contentContainerStyle: { paddingRight: this.state.itemWidth / 2 },
-            onMomentumScrollBegin: this.onScrollStart,
-            onMomentumScrollEnd: this.onScrollEnd,
-            onScrollBeginDrag: this.onScrollBeginDrag,
             ...pagingProps
           }}
         />

@@ -16,7 +16,8 @@ export default StyleSheet.create({
     justifyContent: "space-between"
   },
   calendarDates: {
-    flex: 1,
+    width: '96%',
+    marginLeft: '2%',
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
@@ -38,6 +39,7 @@ export default StyleSheet.create({
   //CALENDAR DAY
   dateRootContainer: {
     flex: 1,
+    alignItems: 'center'
   },
   dateContainer: {
     justifyContent: "center",

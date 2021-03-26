@@ -80,8 +80,6 @@ interface CalendarStripProps {
   selectedDate?: Moment;
   onDateSelected?: ((date: Moment) => void);
   onWeekChanged?: ((start: Moment, end: Moment) => void);
-  onWeekScrollStart?: ((start: Moment, end: Moment) => void);
-  onWeekScrollEnd?: ((start: Moment, end: Moment) => void);
   onHeaderSelected?: ((dates: {weekStartDate: Moment, weekEndDate: Moment}) => void);
   updateWeek?: boolean;
   useIsoWeekday?: boolean;
@@ -146,7 +144,7 @@ interface CalendarStripProps {
 
   headerText?: string;
 
-  ref?: RefObject<any>;
+  ref?: RefObject;
 }
 
 export default class ReactNativeCalendarStrip extends Component<CalendarStripProps> {
